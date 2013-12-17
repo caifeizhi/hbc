@@ -86,4 +86,3 @@ class HbcClient(object):
 if __name__ == "__main__":
 	client = HbcClient()
 	client.connect(client.getServerIP())
-	print "Hello world!"
