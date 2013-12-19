@@ -17,8 +17,19 @@ class HbcClient(object):
 	def connect(self, ip):
 		self.clisocket.connect((ip, self.port))
 
-		self.run()
+	def read(self, filename):	
+		fp = open("test.txt", r)
+		data = ""
+		while True:
+			tmp = fp.read(1024)
+			if (tmp != ""):
+				data = data + tmp
+			else:
+				break
 
+	def parsedata(self, data):
+		pass
+		
 	def run(self):
 		while (self.step <= 7):
 			print "step ", self.step
@@ -48,8 +59,22 @@ class HbcClient(object):
 
 			self.step = self.step + 1
 		
+	def sendmsg(self, index, msgheader, msgdata):
+		data = str(index) + ":" + msgheader
+		#one packet
+		p = 1024 - len(data)
+		data = data + msgdata[0:p]
+		self.clisock.send(data)
+		
+		#more than one
+		while (p < len(msgdata)):	
+			data = data + msgdata[p:p + 1024]
+			self.clisock.send(data)
+			p = p + 1024
+
 	def recvmsg(self):
-		data = self.clisocket.recv(1024)
+		while True:
+			data = self.clisocket.recv(1024)
 
 		datalist = data.split(':', 1)
 		msgheader = datalist[0]
@@ -59,7 +84,7 @@ class HbcClient(object):
 
 	def getindex():
 		(msgheader, msgdata) = self.recvmsg()
-		if (msgheader == "index")
+		if (msgheader == "index"):
 			self.index = int(msgdata)
 
 	def step1(self):
@@ -83,6 +108,6 @@ class HbcClient(object):
 	def step7(self):
 		pass
 
-if __name__ == "__main__":
-	client = HbcClient()
-	client.connect(client.getServerIP())
+#if __name__ == "__main__":
+#	client = HbcClient()
+#	client.connect(client.getServerIP())

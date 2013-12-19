@@ -1,4 +1,5 @@
 import socket
+import thread
 
 class HbcServer(object):
 	port = 9531
@@ -24,6 +25,11 @@ class HbcServer(object):
 			self.sendmsg(index, "index", "")
 			index = index + 1
 
+	def procforward(self, index, clisock):
+		while True:
+			while True:
+				clisock.recv(1024)
+		
 	def sendmsg(self, index, msgtype, msg):
 		if (msgtype == "index"):
 			data = "index:" + str(index)
@@ -51,3 +57,4 @@ class HbcServer(object):
 if __name__ == "__main__":
 	server = HbcServer(2)
 	server.wait()
+	server.run()
