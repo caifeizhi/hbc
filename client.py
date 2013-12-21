@@ -60,17 +60,16 @@ class HbcClient(object):
 			self.step = self.step + 1
 		
 	def sendmsg(self, index, msgheader, msgdata):
-		data = str(index) + ":" + msgheader
-		#one packet
-		p = 1024 - len(data)
-		data = data + msgdata[0:p]
-		self.clisock.send(data)
-		
+		#first packet
+		header = str(index) + ":" + msgheader
+		data = header + msgdata[0:1024]
+		i = 1024
+
 		#more than one
-		while (p < len(msgdata)):	
-			data = data + msgdata[p:p + 1024]
+		while (i < len(msgdata)):	
+			data = str(index)+ ":" + msgdata[i:i + 1024]
 			self.clisock.send(data)
-			p = p + 1024
+			i = i + 1024
 
 	def recvmsg(self):
 		while True:
